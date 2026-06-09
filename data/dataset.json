@@ -1,0 +1,122 @@
+[
+  {
+    "umur": "tinggi",
+    "kolesterol": "tinggi",
+    "tekanan_darah": "tinggi",
+    "jantung": "ya"
+  },
+  {
+    "umur": "rendah",
+    "kolesterol": "rendah",
+    "tekanan_darah": "normal",
+    "jantung": "tidak"
+  },
+  {
+    "umur": "tinggi",
+    "kolesterol": "normal",
+    "tekanan_darah": "tinggi",
+    "jantung": "ya"
+  },
+  {
+    "umur": "tinggi",
+    "kolesterol": "tinggi",
+    "tekanan_darah": "normal",
+    "jantung": "ya"
+  },
+  {
+    "umur": "rendah",
+    "kolesterol": "rendah",
+    "tekanan_darah": "tinggi",
+    "jantung": "tidak"
+  },
+  {
+    "umur": "sedang",
+    "kolesterol": "tinggi",
+    "tekanan_darah": "tinggi",
+    "jantung": "ya"
+  },
+  {
+    "umur": "sedang",
+    "kolesterol": "normal",
+    "tekanan_darah": "normal",
+    "jantung": "tidak"
+  },
+  {
+    "umur": "tinggi",
+    "kolesterol": "tinggi",
+    "tekanan_darah": "tinggi",
+    "jantung": "ya"
+  },
+  {
+    "umur": "rendah",
+    "kolesterol": "tinggi",
+    "tekanan_darah": "normal",
+    "jantung": "tidak"
+  },
+  {
+    "umur": "tinggi",
+    "kolesterol": "normal",
+    "tekanan_darah": "tinggi",
+    "jantung": "ya"
+  },
+  {
+    "umur": "sedang",
+    "kolesterol": "tinggi",
+    "tekanan_darah": "normal",
+    "jantung": "ya"
+  },
+  {
+    "umur": "rendah",
+    "kolesterol": "normal",
+    "tekanan_darah": "normal",
+    "jantung": "tidak"
+  },
+  {
+    "umur": "tinggi",
+    "kolesterol": "normal",
+    "tekanan_darah": "normal",
+    "jantung": "tidak"
+  },
+  {
+    "umur": "sedang",
+    "kolesterol": "rendah",
+    "tekanan_darah": "normal",
+    "jantung": "tidak"
+  },
+  {
+    "umur": "tinggi",
+    "kolesterol": "tinggi",
+    "tekanan_darah": "tinggi",
+    "jantung": "ya"
+  },
+  {
+    "umur": "sedang",
+    "kolesterol": "tinggi",
+    "tekanan_darah": "tinggi",
+    "jantung": "ya"
+  },
+  {
+    "umur": "rendah",
+    "kolesterol": "rendah",
+    "tekanan_darah": "normal",
+    "jantung": "tidak"
+  },
+  {
+    "umur": "tinggi",
+    "kolesterol": "normal",
+    "tekanan_darah": "tinggi",
+    "jantung": "ya"
+  },
+  {
+    "umur": "sedang",
+    "kolesterol": "normal",
+    "tekanan_darah": "tinggi",
+    "jantung": "ya"
+  },
+  {
+    "umur": "rendah",
+    "kolesterol": "tinggi",
+    "tekanan_darah": "tinggi",
+    "jantung": "tidak"
+  }
+]
