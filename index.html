@@ -1,0 +1,56 @@
+<<<<<<< HEAD
+=======
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistem Prediksi Risiko Jantung Bayesian</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Prediksi Risiko Penyakit Jantung</h1>
+
+        <form id="heartForm">
+
+            <label>Usia</label>
+            <input type="number" id="usia">
+
+            <label>Jenis Kelamin</label>
+            <select id="gender">
+                <option value="">Pilih</option>
+                <option value="L">Laki-laki</option>
+                <option value="P">Perempuan</option>
+            </select>
+
+            <label>Tekanan Darah</label>
+            <select id="tekanan">
+                <option value="">Pilih</option>
+                <option value="tinggi">Tinggi</option>
+                <option value="normal">Normal</option>
+            </select>
+
+            <label>Kolesterol</label>
+            <select id="kolesterol">
+                <option value="">Pilih</option>
+                <option value="tinggi">Tinggi</option>
+                <option value="normal">Normal</option>
+            </select>
+
+            <button type="button" id="btnHitung">
+                Hitung Risiko
+            </button>
+
+        </form>
+
+        <div id="hasil"></div>
+    </div>
+
+    <script src="js/input.js"></script>
+    <script src="js/bayes.js"></script>
+    <script src="js/result.js"></script>
+
+</body>
+</html>
+>>>>>>> e3f34adec489e1f4430c64276ff087154efc1284
