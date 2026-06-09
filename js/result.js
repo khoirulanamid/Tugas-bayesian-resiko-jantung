@@ -4,6 +4,11 @@ function tampilkanHasil(probabilitas) {
 
   const hasilContainer = document.getElementById("hasil");
 
+  if (!hasilContainer) {
+    console.error("Error: Elemen dengan id='hasil' tidak ditemukan di HTML!");
+    return;
+  }
+
   let kategori = "";
   let warna = "";
   let emoji = "";

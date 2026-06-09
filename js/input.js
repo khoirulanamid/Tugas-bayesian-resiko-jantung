@@ -1,57 +1,51 @@
 // js/input.js
 
 function getInputData() {
-    const umur = document.getElementById("umur").value;
-    const tekananDarah = document.getElementById("tekananDarah").value;
+    const usia = document.getElementById("usia").value;
+    const gender = document.getElementById("gender").value;
+    const tekanan = document.getElementById("tekanan").value;
     const kolesterol = document.getElementById("kolesterol").value;
-    const gulaDarah = document.getElementById("gulaDarah").value;
-    const merokok = document.getElementById("merokok").value;
-    const olahraga = document.getElementById("olahraga").value;
 
     // Validasi input
     if (
-        umur === "" ||
-        tekananDarah === "" ||
-        kolesterol === "" ||
-        gulaDarah === "" ||
-        merokok === "" ||
-        olahraga === ""
+        usia === "" ||
+        gender === "" ||
+        tekanan === "" ||
+        kolesterol === ""
     ) {
         alert("Semua data harus diisi!");
         return null;
     }
 
-    // Mengubah umur menjadi kategori
-    let kategoriUmur;
+    // Mengubah usia menjadi kategori
+    let kategoriUsia;
 
-    if (umur < 40) {
-        kategoriUmur = "Muda";
-    } else if (umur < 60) {
-        kategoriUmur = "ParuhBaya";
+    if (parseInt(usia) < 40) {
+        kategoriUsia = "Muda";
+    } else if (parseInt(usia) < 60) {
+        kategoriUsia = "ParuhBaya";
     } else {
-        kategoriUmur = "Lansia";
+        kategoriUsia = "Lansia";
     }
 
     return {
-        umur: kategoriUmur,
-        tekananDarah: tekananDarah,
-        kolesterol: kolesterol,
-        gulaDarah: gulaDarah,
-        merokok: merokok,
-        olahraga: olahraga
+        usia: kategoriUsia,
+        gender: gender,
+        tekanan: tekanan,
+        kolesterol: kolesterol
     };
 }
 
-// Event tombol prediksi
-document.getElementById("btnPrediksi").addEventListener("click", function () {
+// Event tombol hitung
+document.getElementById("btnHitung").addEventListener("click", function () {
 
     const dataPasien = getInputData();
 
     if (dataPasien) {
         console.log("Data Input:", dataPasien);
 
-        // Kirim ke bayes.js
-        hitungBayes(dataPasien);
+        // Hitung risiko dengan Bayes
+        hitungResiko();
     }
 
 });

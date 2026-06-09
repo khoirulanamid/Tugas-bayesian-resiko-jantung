@@ -32,16 +32,72 @@ function calculateBayesianProbability(priorA, likelihoodB_given_A, likelihoodB_g
     return posteriorA_given_B;
 }
 
-// --- Contoh Penggunaan untuk Risiko Jantung ---
-// Misalkan:
-// A = "Seseorang memiliki penyakit jantung"
-// B = "Seseorang memiliki gejala tertentu (misalnya, nyeri dada, kolesterol tinggi)"
+/**
+ * Fungsi 'hitungResiko' untuk menghubungkan input di HTML dengan logika Bayes.
+ * Fungsi ini dipanggil ketika tombol "Hitung Risiko" diklik.
+ */
+function hitungResiko() {
+    console.log("Memulai perhitungan risiko...");
 
-const priorHeartDisease = 0.10; // P(Penyakit Jantung) = 10% dari populasi memiliki penyakit jantung (probabilitas awal)
-const likelihoodSymptom_given_HeartDisease = 0.80; // P(Gejala | Penyakit Jantung) = 80% orang dengan penyakit jantung memiliki gejala
-const likelihoodSymptom_given_notHeartDisease = 0.20; // P(Gejala | Bukan Penyakit Jantung) = 20% orang tanpa penyakit jantung juga memiliki gejala
+    try {
+        // 1. Ambil nilai dari input HTML form
+        const usia = document.getElementById("usia").value;
+        const gender = document.getElementById("gender").value;
+        const tekanan = document.getElementById("tekanan").value;
+        const kolesterol = document.getElementById("kolesterol").value;
 
-const posteriorHeartDisease = calculateBayesianProbability(priorHeartDisease, likelihoodSymptom_given_HeartDisease, likelihoodSymptom_given_notHeartDisease);
+        console.log("Data Input:", { usia, gender, tekanan, kolesterol });
 
-console.log(`Probabilitas seseorang memiliki penyakit jantung JIKA mereka memiliki gejala: ${posteriorHeartDisease.toFixed(4)}`);
-console.log(`Ini berarti ada sekitar ${ (posteriorHeartDisease * 100).toFixed(2) }% kemungkinan orang tersebut memiliki penyakit jantung jika mereka menunjukkan gejala.`);
+        // 2. Hitung prior probability (probabilitas dasar risiko penyakit jantung)
+        // Dasar: penyakit jantung ~ 10% dari populasi
+        let priorRisiko = 0.10;
+
+        // Adjust berdasarkan usia
+        const usiaNum = parseInt(usia);
+        if (usiaNum >= 60) {
+            priorRisiko += 0.15; // Lansia lebih berisiko
+        } else if (usiaNum >= 40) {
+            priorRisiko += 0.05; // Paruh baya sedikit lebih berisiko
+        }
+
+        // 3. Hitung likelihood berdasarkan faktor-faktor
+        let likelihoodDenganRisiko = 0.6; // P(gejala | sakit)
+        
+        // Tambah likelihood jika ada tekanan darah tinggi
+        if (tekanan === "tinggi") {
+            likelihoodDenganRisiko += 0.15;
+        }
+
+        // Tambah likelihood jika ada kolesterol tinggi
+        if (kolesterol === "tinggi") {
+            likelihoodDenganRisiko += 0.10;
+        }
+
+        // Kurangi likelihood jika wanita (usia reproduktif)
+        if (gender === "P" && usiaNum < 50) {
+            likelihoodDenganRisiko -= 0.10;
+        }
+
+        // Likelihood tanpa risiko (P(gejala | tidak sakit))
+        const likelihoodTanpaRisiko = 0.15;
+
+        // 4. Hitung dengan Teorema Bayes
+        const risikoPersentase = calculateBayesianProbability(
+            priorRisiko,
+            likelihoodDenganRisiko,
+            likelihoodTanpaRisiko
+        ) * 100;
+
+        console.log("Hasil Probabilitas:", risikoPersentase.toFixed(2) + "%");
+
+        // 5. Tampilkan hasil
+        if (typeof tampilkanHasil === "function") {
+            tampilkanHasil(risikoPersentase);
+        } else {
+            console.error("Fungsi 'tampilkanHasil' tidak ditemukan. Pastikan file result.js sudah dimuat di HTML.");
+        }
+    } catch (error) {
+        alert("Kesalahan: " + error.message);
+        console.error(error);
+    }
+}
