@@ -348,90 +348,68 @@ input:checked + .slider:before { transform: translateX(20px); }
 .data-table td span.ya { color: var(--health-red); font-weight: bold; background: #FFEBEE; padding: 2px 8px; border-radius: 12px; }
 .data-table td span.tidak { color: var(--health-green); font-weight: bold; background: #E8F5E9; padding: 2px 8px; border-radius: 12px; }
 
-/* Responsive Breakpoints */
+/* Responsive Breakpoints & Mobile Optimization */
+
+/* Tablet & Laptop Sedang */
 @media (max-width: 1100px) {
     .dashboard-header, .split-dashboard { grid-template-columns: 1fr; gap: 16px; }
-    /* Dashboard Top Header Bar (Sejajar dengan Split Dashboard) */
-.dashboard-header {
-    display: grid;
-    grid-template-columns: 420px 1fr;
-    gap: 32px;
-    align-items: center; /* Meratakan secara vertikal jika tinggi teksnya berubah */
-    margin-bottom: 8px;
+    .dashboard-header { align-items: stretch; margin-bottom: 24px; }
 }
-    .split-dashboard > #formCard, .split-dashboard > #hasilCard { height: 600px !important; }
-}
-@media (max-width: 600px) {
-    .hero-section h1 { font-size: 1.8rem; }
-    .sample-download-bar { flex-direction: column; gap: 8px; align-items: stretch; height: auto; }
-    .sample-download-bar select { width: 100%; }
-}
-    .right-column { height: auto; }
-    .split-dashboard > #formCard, .split-dashboard > #hasilCard { height: 600px !important; }
-}
-@media (max-width: 600px) {
-    .hero-section h1 { font-size: 1.8rem; }
-    .sample-download-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--canvas-white);
-    padding: 12px 20px;
-    border-radius: var(--rounded-md);
-    box-shadow: 0 2px 12px rgba(0,0,0,0.03);
-    border: 1px solid rgba(0,0,0,0.02);
-    height: 52px; /* Tinggi statis agar sejajar manis dengan teks di sampingnya */
-}
-    .sample-download-bar select { width: 100%; }
-}
-}
+
+/* Smartphone & Layar Sentuh Kecil */
+@media (max-width: 960px) {
+    /* 1. Kembalikan sifat alamiah browser di HP (Bisa di-scroll layar utamanya) */
     body { 
-    background-color: var(--canvas-parchment); 
-    color: var(--text-hero); 
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    padding-top: 54px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+        height: auto !important; 
+        min-height: 100vh !important; 
+        overflow: auto !important; 
+    }
+    
+    .main-wrapper { 
+        height: auto !important; 
+        padding: 0 16px; /* Kurangi padding samping agar form lebih lebar */
+        margin-top: 16px;
+    }
+
+    /* 2. Jadikan tata letak berjejer atas-bawah (1 Kolom) */
+    .split-dashboard { 
+        grid-template-columns: 1fr; 
+        gap: 20px;
+    }
+    .right-column { height: auto !important; }
+
+    /* 3. Lepaskan penguncian tinggi kotak di HP agar tidak ada scroll-in-scroll */
+    .split-dashboard > #formCard, .split-dashboard > #hasilCard { 
+        height: auto !important; 
+        max-height: none !important; 
+        overflow-y: visible !important; 
+        padding: 24px 20px;
+    }
+    
+    .hero-section h1 { font-size: 2.2rem; }
+    .hero-section p { font-size: 1rem; }
 }
-    .main-wrapper {
-    width: 100%;
-    max-width: 1440px; /* Diperlebar hingga resolusi Widescreen agar tabel sangat lega */
-    margin: 16px auto 0;
-    padding: 0 32px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    gap: 16px;
-}
-    .split-dashboard {
-    display: grid;
-    /* Memberikan ruang kanan jauh lebih lebar (rasio 42% : 58%) */
-    grid-template-columns: 420px 1fr; 
-    gap: 32px;
-    align-items: stretch;
-}
-    .split-dashboard > #formCard, .split-dashboard > #hasilCard { height: 600px !important; max-height: 600px !important; }
-}
+
+/* Layar HP Ultra Kecil (Potrait) */
 @media (max-width: 600px) {
     .hero-section h1 { font-size: 1.8rem; }
-    .form-grid, .params-recap { grid-template-columns: 1fr; }
+    
+    /* Tumpuk tombol unduh contoh dataset */
+    .sample-download-bar { flex-direction: column; gap: 12px; align-items: stretch; height: auto; text-align: center; }
+    .sample-download-bar select { width: 100%; }
+
+    /* Tumpuk input form menjadi 1 kolom (dari 2 kolom) */
+    .form-grid { grid-template-columns: 1fr; gap: 16px; }
+    
+    /* Tumpuk rekap parameter hasil jadi 1 kolom */
+    .params-recap { grid-template-columns: 1fr; gap: 12px; }
+    
+    .progress-number { font-size: 3rem; }
+    .progress-number span { font-size: 1.4rem; }
+
+    /* Gulir Menu Tab secara horizontal jika tak muat di layar sempit */
+    .segmented-control { flex-direction: column; gap: 4px; padding: 6px; }
+    .tab-indicator { display: none; } /* Matikan animasi indikator karena tombol jadi vertikal */
+    .tab-btn { background: white; margin-bottom: 4px; border: 1px solid var(--border-light); }
+    .tab-btn.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
