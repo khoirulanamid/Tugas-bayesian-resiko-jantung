@@ -1,4 +1,4 @@
-[
+const DATASET_JANTUNG = [
   {
     "umur": "tinggi",
     "gender": "L",
@@ -1349,4 +1349,4 @@
     "riwayat_keluarga": "tidak",
     "jantung": "ya"
   }
-]
+];

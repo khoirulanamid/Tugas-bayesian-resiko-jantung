@@ -1,53 +1,183 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Sistem Prediksi Risiko Jantung Bayesian</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Prediksi Risiko Jantung - HealthTech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-    <div class="container">
-        <h1>Prediksi Risiko Penyakit Jantung</h1>
+    <!-- Apple Frosted Glass Nav -->
+    <nav class="global-nav">
+        <div class="nav-content">
+            <div class="nav-logo">
+                ❤️ HealthTech Pro
+            </div>
+        </div>
+    </nav>
 
-        <form id="heartForm">
+    <div class="main-wrapper">
+                <!-- Dashboard Top Header Bar -->
+        <div class="dashboard-header">
+            <!-- Kiri: Hero Judul -->
+            <section class="hero-section">
+                <h1>Analisis Risiko Jantung.</h1>
+                <p>Sistem pakar medis berbasis Teorema Naive Bayes.</p>
+            </section>
 
-            <label>Usia</label>
-            <input type="number" id="usia">
+            <!-- Kanan: Bar Unduhan Contoh Dataset -->
+            <div class="sample-download-bar">
+                <span class="sample-label">💡 Belum punya dataset? Unduh contoh:</span>
+                <select id="downloadSelect" onchange="downloadSampleDataset(this.value); this.value='';">
+                    <option value="">-- Unduh Contoh Dataset --</option>
+                    <option value="csv">📥 Unduh Format CSV (Excel)</option>
+                    <option value="json">📥 Unduh Format JSON</option>
+                </select>
+            </div>
+        </div>
 
-            <label>Jenis Kelamin</label>
-            <select id="gender">
-                <option value="">Pilih</option>
-                <option value="L">Laki-laki</option>
-                <option value="P">Perempuan</option>
-            </select>
+        <!-- 2 Columns Dashboard Split -->
+        <div class="split-dashboard">
+            
+            <!-- KARTU KIRI: KONFIGURASI & INPUT PASIEN -->
+            <div class="apple-card" id="formCard">
+                <div id="error-message" class="error-alert" style="display: none;"></div>
 
-            <label>Tekanan Darah</label>
-            <select id="tekanan">
-                <option value="">Pilih</option>
-                <option value="tinggi">Tinggi</option>
-                <option value="normal">Normal</option>
-            </select>
+                <form id="heartForm">
+                    
+                    <!-- Dataset Source Config -->
+                    <div class="form-group" style="margin-bottom: 24px; border-bottom: 1px solid var(--border-light); padding-bottom: 24px;">
+                        <label for="sumberDataset">📂 Sumber Data Populasional</label>
+                        <select id="sumberDataset">
+                            <option value="default">Dataset Default Sistem (150 Data Historis)</option>
+                            <option value="kustom">Unggah File Kustom (Excel / CSV / JSON)</option>
+                        </select>
 
-            <label>Kolesterol</label>
-            <select id="kolesterol">
-                <option value="">Pilih</option>
-                <option value="tinggi">Tinggi</option>
-                <option value="normal">Normal</option>
-            </select>
+                                            <div id="uploadContainer" class="upload-container">
+                        <div class="dropzone-icon">📁</div>
+                        <label>Seret & Lepas dataset di sini<br><span style="font-size: 0.8rem; font-weight: 400; color: var(--text-muted);">atau klik untuk mencari file (.xlsx, .csv, .json)</span></label>
+                        <input type="file" id="fileDataset" accept=".xlsx, .xls, .csv, .json">
+                        <div id="uploadStatus" class="upload-status">Belum ada file.</div>
+                    </div>
+                    </div>
 
-            <button type="button" id="btnHitung">
-                Hitung Risiko
-            </button>
+                    <h3 style="font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 20px; color: #1E293B; border-bottom: 2px solid #F1F5F9; padding-bottom: 12px; display: inline-block;">🩺 Parameter Medis Pasien</h3>
 
-        </form>
+                    <!-- Parameters Grid -->
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="usia">Usia Pasien (Tahun)</label>
+                            <input type="number" id="usia" placeholder="Misal: 45" min="1" max="120" required>
+                        </div>
 
-        <div id="hasil"></div>
+                        <div class="form-group">
+                            <label for="gender">Jenis Kelamin</label>
+                            <select id="gender" required>
+                                <option value="">-- Pilih --</option>
+                                <option value="L">Laki-laki</option>
+                                <option value="P">Perempuan</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tekanan">Tekanan Darah</label>
+                            <select id="tekanan" required>
+                                <option value="">-- Pilih --</option>
+                                <option value="rendah">Rendah (< 90/60 mmHg)</option>
+                                <option value="normal">Normal (90/60 - 120/80)</option>
+                                <option value="tinggi">Tinggi (> 120/80 mmHg)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="kolesterol">Kolesterol Total</label>
+                            <select id="kolesterol" required>
+                                <option value="">-- Pilih --</option>
+                                <option value="rendah">Optimal (< 200 mg/dL)</option>
+                                <option value="normal">Normal (200 - 239 mg/dL)</option>
+                                <option value="tinggi">Tinggi (≥ 240 mg/dL)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gula_darah">Gula Darah Puasa</label>
+                            <select id="gula_darah" required>
+                                <option value="">-- Pilih --</option>
+                                <option value="normal">Normal (< 126 mg/dL)</option>
+                                <option value="diabetes">Diabetes (≥ 126 mg/dL)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="riwayat">Riwayat Genetik</label>
+                            <select id="riwayat" required>
+                                <option value="">-- Pilih --</option>
+                                <option value="tidak">Tidak Ada</option>
+                                <option value="ada">Ada Riwayat Keluarga</option>
+                            </select>
+                        </div>
+                    </div>
+
+                                        <!-- Advance Settings -->
+                    <div class="toggle-wrapper">
+                        <div class="toggle-info">
+                            <h4>Laplace Smoothing</h4>
+                            <p>Cegah eror jika ada probabilitas bernilai Nol (0).</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="laplaceToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <!-- Action CTA -->
+                    <div class="form-action">
+                        <button type="button" id="btnHitung" class="btn-primary">
+                            ⚡ Hitung Probabilitas Risiko
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+                                    <!-- KARTU KANAN: PANEL LAPORAN HASIL ANALISIS -->
+            <div class="apple-card" id="hasilCard">
+                    <div id="hasil">
+                        <div class="empty-result-state">
+                            <div class="empty-icon">🫀</div>
+                            <div class="empty-title">Siap Menganalisis Risiko</div>
+                            <p>Silakan isi ke-6 parameter medis pasien di sebelah kiri, kemudian tekan tombol <b>Hitung Probabilitas Risiko</b> untuk menampilkan laporan lengkap.</p>
+                        </div>
+                    </div>
+                                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="app-footer">
+            <p>&copy; 2026 HealthTech Pro &bull; Desain Terinspirasi Apple Health Dashboard</p>
+        </footer>
     </div>
 
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="js/dataset.js"></script>
+    <script src="js/upload.js"></script>
     <script src="js/input.js"></script>
     <script src="js/bayes.js"></script>
     <script src="js/result.js"></script>
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+

@@ -1,208 +1,114 @@
-// ============================================
-// 1. FUNGSI UNTUK LOAD DAN HITUNG PROBABILITAS DARI DATASET
+﻿// ============================================
+// FUNGSI PERHITUNGAN NAIVE BAYES (6 PARAMETER KLINIS)
 // ============================================
 
-let datasetCache = null;
-let probabilitasCache = null;
+let infoDatasetTerakhir = { nama: 'Dataset Default Sistem', total: 150 };
 
-// Load dataset dari JSON file
 async function loadDataset() {
-    if (datasetCache) return datasetCache;
-    
-    try {
-        const response = await fetch('data/dataset.json');
-        datasetCache = await response.json();
-        console.log("Dataset dimuat:", datasetCache.length, "records");
-        return datasetCache;
-    } catch (error) {
-        console.error("Error loading dataset:", error);
-        return [];
+    const sumberSelect = document.getElementById('sumberDataset');
+    if (sumberSelect && sumberSelect.value === 'kustom') {
+        if (!DATASET_KUSTOM || DATASET_KUSTOM.length === 0) throw new Error('Anda belum mengunggah file dataset atau file tersebut tidak valid/kosong.');
+        const fileInput = document.getElementById('fileDataset');
+        const fileName = (fileInput && fileInput.files[0]) ? fileInput.files[0].name : 'File Kustom';
+        infoDatasetTerakhir = { nama: 'File Unggahan (' + fileName + ')', total: DATASET_KUSTOM.length };
+        return DATASET_KUSTOM;
     }
-}
-
-// Hitung probabilitas dari dataset
-function hitungProbabilitasDariDataset(dataset) {
-    if (!dataset || dataset.length === 0) {
-        console.warn("Dataset kosong, menggunakan nilai default");
-        return null;
+    if (typeof DATASET_JANTUNG !== 'undefined' && Array.isArray(DATASET_JANTUNG)) {
+        infoDatasetTerakhir = { nama: 'Dataset Default Sistem', total: DATASET_JANTUNG.length };
+        return DATASET_JANTUNG;
     }
-
-    // Hitung jumlah total dan kasus penyakit jantung
-    const totalData = dataset.length;
-    const kasusJantung = dataset.filter(d => d.jantung === "ya").length;
-    const kasusNormal = totalData - kasusJantung;
-
-    // Prior probability: P(Jantung)
-    const priorJantung = kasusJantung / totalData;
-    const priorNormal = kasusNormal / totalData;
-
-    console.log(`Prior - Jantung: ${(priorJantung * 100).toFixed(2)}%, Normal: ${(priorNormal * 100).toFixed(2)}%`);
-
-    // Hitung likelihood untuk setiap faktor
-    // P(Faktor | Jantung) dan P(Faktor | Normal)
-    
-    const dataJantung = dataset.filter(d => d.jantung === "ya");
-    const dataNormal = dataset.filter(d => d.jantung === "tidak");
-
-    const faktor = {};
-
-    // Faktor: Umur Tinggi
-    faktor.umurTinggi = {
-        givenJantung: dataJantung.filter(d => d.umur === "tinggi").length / (dataJantung.length || 1),
-        givenNormal: dataNormal.filter(d => d.umur === "tinggi").length / (dataNormal.length || 1)
-    };
-
-    // Faktor: Kolesterol Tinggi
-    faktor.kolesterolTinggi = {
-        givenJantung: dataJantung.filter(d => d.kolesterol === "tinggi").length / (dataJantung.length || 1),
-        givenNormal: dataNormal.filter(d => d.kolesterol === "tinggi").length / (dataNormal.length || 1)
-    };
-
-    // Faktor: Tekanan Darah Tinggi
-    faktor.tekananTinggi = {
-        givenJantung: dataJantung.filter(d => d.tekanan_darah === "tinggi").length / (dataJantung.length || 1),
-        givenNormal: dataNormal.filter(d => d.tekanan_darah === "tinggi").length / (dataNormal.length || 1)
-    };
-
-    console.log("Likelihood dari dataset:", faktor);
-
-    return {
-        priorJantung,
-        priorNormal,
-        faktor
-    };
-}
-
-// ============================================
-// 2. FUNGSI BAYESIAN (Original)
-// ============================================
-
-/**
- * Menghitung probabilitas posterior menggunakan Teorema Bayes.
- * P(A|B) = [P(B|A) * P(A)] / P(B)
- *
- * @param {number} priorA - Probabilitas awal (prior) kejadian A, P(A).
- * @param {number} likelihoodB_given_A - Probabilitas kejadian B jika A benar, P(B|A).
- * @param {number} likelihoodB_given_notA - Probabilitas kejadian B jika A salah, P(B|not A).
- * @returns {number} Probabilitas posterior kejadian A jika B benar, P(A|B).
- */
-function calculateBayesianProbability(priorA, likelihoodB_given_A, likelihoodB_given_notA) {
-    // Pastikan probabilitas berada dalam rentang [0, 1]
-    if (priorA < 0 || priorA > 1 ||
-        likelihoodB_given_A < 0 || likelihoodB_given_A > 1 ||
-        likelihoodB_given_notA < 0 || likelihoodB_given_notA > 1) {
-        throw new Error("Semua probabilitas harus berada di antara 0 dan 1.");
-    }
-
-    const priorNotA = 1 - priorA; // P(not A)
-
-    // Hitung probabilitas bukti P(B)
-    // P(B) = P(B|A) * P(A) + P(B|not A) * P(not A)
-    const probabilityB = (likelihoodB_given_A * priorA) + (likelihoodB_given_notA * priorNotA);
-
-    // Jika P(B) adalah 0, maka tidak mungkin B terjadi, sehingga P(A|B) juga 0.
-    if (probabilityB === 0) {
-        return 0;
-    }
-
-    // Hitung probabilitas posterior P(A|B)
-    const posteriorA_given_B = (likelihoodB_given_A * priorA) / probabilityB;
-
-    return posteriorA_given_B;
+    throw new Error('Dataset default gagal dimuat.');
 }
 
 /**
- * Fungsi 'hitungResiko' untuk menghubungkan input di HTML dengan logika Bayes.
- * Fungsi ini dipanggil ketika tombol "Hitung Risiko" diklik.
- * MENGGUNAKAN DATA DARI DATASET UNTUK MENGHITUNG PROBABILITAS
+ * Menghitung probabilitas bersyarat (Likelihood) P(Fitur = Nilai | Kelas)
+ * Jika isLaplace aktif, tambahkan add-1 smoothing.
  */
+function hitungLikelihood(subsetData, namaFitur, nilaiTarget, jumlahKategoriUnik, isLaplace) {
+    const cocok = subsetData.filter(item => item[namaFitur] === nilaiTarget).length;
+    if (isLaplace) {
+        return (cocok + 1) / (subsetData.length + jumlahKategoriUnik);
+    } else {
+        return cocok / subsetData.length || 0;
+    }
+}
+
 async function hitungResiko() {
-    console.log("Memulai perhitungan risiko...");
+    const errorBox = document.getElementById('error-message');
+    if (errorBox) errorBox.style.display = 'none';
+
+    const dataPasien = typeof getInputData === 'function' ? getInputData() : null;
+    if (!dataPasien) return;
 
     try {
-        // 1. Ambil nilai dari input HTML form
-        const usia = document.getElementById("usia").value;
-        const gender = document.getElementById("gender").value;
-        const tekanan = document.getElementById("tekanan").value;
-        const kolesterol = document.getElementById("kolesterol").value;
+        const btn = document.getElementById('btnHitung');
+        const textAwal = btn.innerHTML;
+        btn.innerHTML = 'Menghitung...';
+        btn.disabled = true;
 
-        console.log("Data Input:", { usia, gender, tekanan, kolesterol });
-
-        // 2. Load dataset dan hitung probabilitas
         const dataset = await loadDataset();
-        
-        if (!dataset || dataset.length === 0) {
-            throw new Error("Tidak bisa load dataset");
+        if (!dataset || dataset.length === 0) throw new Error('Dataset kosong atau tidak sah.');
+
+        const laplaceToggle = document.getElementById('laplaceToggle');
+        const isLaplace = laplaceToggle ? laplaceToggle.checked : true;
+
+        const dataJantungYa = dataset.filter(d => d.jantung === 'ya');
+        const dataJantungTidak = dataset.filter(d => d.jantung === 'tidak');
+
+        const priorYa = dataJantungYa.length / dataset.length;
+        const priorTidak = dataJantungTidak.length / dataset.length;
+
+        // Hitung masing-masing kemungkinan fitur
+        const likeYa_umur = hitungLikelihood(dataJantungYa, 'umur', dataPasien.usia, 3, isLaplace);
+        const likeTidak_umur = hitungLikelihood(dataJantungTidak, 'umur', dataPasien.usia, 3, isLaplace);
+
+        const likeYa_gender = hitungLikelihood(dataJantungYa, 'gender', dataPasien.gender, 2, isLaplace);
+        const likeTidak_gender = hitungLikelihood(dataJantungTidak, 'gender', dataPasien.gender, 2, isLaplace);
+
+        const likeYa_tekanan = hitungLikelihood(dataJantungYa, 'tekanan_darah', dataPasien.tekanan, 3, isLaplace);
+        const likeTidak_tekanan = hitungLikelihood(dataJantungTidak, 'tekanan_darah', dataPasien.tekanan, 3, isLaplace);
+
+        const likeYa_kolesterol = hitungLikelihood(dataJantungYa, 'kolesterol', dataPasien.kolesterol, 3, isLaplace);
+        const likeTidak_kolesterol = hitungLikelihood(dataJantungTidak, 'kolesterol', dataPasien.kolesterol, 3, isLaplace);
+
+        const likeYa_gula = hitungLikelihood(dataJantungYa, 'gula_darah', dataPasien.gula_darah, 2, isLaplace);
+        const likeTidak_gula = hitungLikelihood(dataJantungTidak, 'gula_darah', dataPasien.gula_darah, 2, isLaplace);
+
+        const likeYa_riwayat = hitungLikelihood(dataJantungYa, 'riwayat_keluarga', dataPasien.riwayat, 2, isLaplace);
+        const likeTidak_riwayat = hitungLikelihood(dataJantungTidak, 'riwayat_keluarga', dataPasien.riwayat, 2, isLaplace);
+
+        // Perhitungan Posterior (6 parameter)
+        const unnormalizedYa = priorYa * likeYa_umur * likeYa_gender * likeYa_tekanan * likeYa_kolesterol * likeYa_gula * likeYa_riwayat;
+        const unnormalizedTidak = priorTidak * likeTidak_umur * likeTidak_gender * likeTidak_tekanan * likeTidak_kolesterol * likeTidak_gula * likeTidak_riwayat;
+
+        const totalProbabilitas = unnormalizedYa + unnormalizedTidak;
+        // Tangani pembagian nol jika semua kemungkinan 0 tanpa laplace
+        let probabilitasJantung = 0;
+        if (totalProbabilitas > 0) {
+            probabilitasJantung = (unnormalizedYa / totalProbabilitas) * 100;
         }
 
-        const prob = hitungProbabilitasDariDataset(dataset);
-        
-        if (!prob) {
-            throw new Error("Tidak bisa menghitung probabilitas dari dataset");
-        }
+        // Kumpulkan Rincian Perhitungan
+        const rincianHitung = {
+            isLaplace,
+            priorYa, priorTidak,
+            likeYa: { umur: likeYa_umur, gender: likeYa_gender, tekanan: likeYa_tekanan, kolesterol: likeYa_kolesterol, gula: likeYa_gula, riwayat: likeYa_riwayat },
+            likeTidak: { umur: likeTidak_umur, gender: likeTidak_gender, tekanan: likeTidak_tekanan, kolesterol: likeTidak_kolesterol, gula: likeTidak_gula, riwayat: likeTidak_riwayat },
+            unnormYa: unnormalizedYa,
+            unnormTidak: unnormalizedTidak
+        };
 
-        // 3. Konversi input ke kategori yang sesuai dengan dataset
-        const usiaNum = parseInt(usia);
-        let kategoriUsia = "rendah";
-        if (usiaNum >= 40 && usiaNum < 60) {
-            kategoriUsia = "sedang";
-        } else if (usiaNum >= 60) {
-            kategoriUsia = "tinggi";
-        }
+        btn.innerHTML = textAwal;
+        btn.disabled = false;
 
-        console.log("Kategori Usia:", kategoriUsia);
-
-        // 4. Hitung likelihood berdasarkan input dan faktor dari dataset
-        // Mulai dari likelihood basal dari dataset
-        let likelihoodJantung = prob.faktor.umurTinggi.givenJantung;
-        let likelihoodNormal = prob.faktor.umurTinggi.givenNormal;
-
-        // Tambahkan faktor kolesterol
-        if (kolesterol === "tinggi") {
-            likelihoodJantung *= prob.faktor.kolesterolTinggi.givenJantung;
-            likelihoodNormal *= prob.faktor.kolesterolTinggi.givenNormal;
-        } else {
-            // Jika normal, gunakan complement
-            likelihoodJantung *= (1 - prob.faktor.kolesterolTinggi.givenJantung);
-            likelihoodNormal *= (1 - prob.faktor.kolesterolTinggi.givenNormal);
-        }
-
-        // Tambahkan faktor tekanan darah
-        if (tekanan === "tinggi") {
-            likelihoodJantung *= prob.faktor.tekananTinggi.givenJantung;
-            likelihoodNormal *= prob.faktor.tekananTinggi.givenNormal;
-        } else {
-            likelihoodJantung *= (1 - prob.faktor.tekananTinggi.givenJantung);
-            likelihoodNormal *= (1 - prob.faktor.tekananTinggi.givenNormal);
-        }
-
-        // Normalisasi likelihood agar tetap dalam range [0, 1]
-        const maxLikelihood = Math.max(likelihoodJantung, likelihoodNormal);
-        if (maxLikelihood > 1) {
-            likelihoodJantung /= maxLikelihood;
-            likelihoodNormal /= maxLikelihood;
-        }
-
-        console.log("Likelihood Jantung:", likelihoodJantung.toFixed(4));
-        console.log("Likelihood Normal:", likelihoodNormal.toFixed(4));
-
-        // 5. Hitung dengan Teorema Bayes
-        const risikoPersentase = calculateBayesianProbability(
-            prob.priorJantung,
-            likelihoodJantung,
-            likelihoodNormal
-        ) * 100;
-
-        console.log("Hasil Probabilitas:", risikoPersentase.toFixed(2) + "%");
-
-        // 6. Tampilkan hasil
-        if (typeof tampilkanHasil === "function") {
-            tampilkanHasil(risikoPersentase);
-        } else {
-            console.error("Fungsi 'tampilkanHasil' tidak ditemukan. Pastikan file result.js sudah dimuat di HTML.");
+        if (typeof tampilkanHasil === 'function') {
+            tampilkanHasil(probabilitasJantung, dataPasien, infoDatasetTerakhir, dataset, rincianHitung);
         }
     } catch (error) {
-        alert("Kesalahan: " + error.message);
         console.error(error);
+        const btn = document.getElementById('btnHitung');
+        if (btn) { btn.innerHTML = '⚡ Hitung Probabilitas Risiko'; btn.disabled = false; }
+        const errorBox = document.getElementById('error-message');
+        if (errorBox) { errorBox.textContent = error.message; errorBox.style.display = 'block'; }
     }
 }
