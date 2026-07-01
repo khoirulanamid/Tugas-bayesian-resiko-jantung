@@ -1,0 +1,17 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="30 50 452 420">
+  <defs>
+    <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF416C" />
+      <stop offset="100%" stop-color="#8A2387" />
+    </linearGradient>
+    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#FF416C" flood-opacity="0.4" />
+    </filter>
+  </defs>
+  <!-- Transparent Background: Heart Icon Only -->
+  <g filter="url(#dropShadow)">
+    <path fill="url(#heartGrad)" d="M256 448l-30.164-27.211C115.542 320.68 42.667 261.08 42.667 186.667 42.667 125.12 90.787 77.047 152.333 77.047c34.816 0 68.224 16.341 89.6 42.069 21.376-25.728 54.784-42.069 89.6-42.069 61.547 0 109.667 48.075 109.667 109.62 0 74.411-72.875 134.013-183.168 234.123L256 448z"/>
+  </g>
+  <!-- Medical EKG Pulse Line -->
+  <path fill="none" stroke="#FFFFFF" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" d="M120 256h50l30-65 45 130 35-90 25 25h87"/>
+</svg>
