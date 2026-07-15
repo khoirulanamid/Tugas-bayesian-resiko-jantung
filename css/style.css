@@ -461,59 +461,7 @@ input:checked + .slider:before { transform: translateX(20px); }
         box-sizing: border-box;
     }
 
-    /* Clinic Header */
-    .clinic-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-    }
-    .clinic-logo {
-        font-size: 4rem;
-        margin-right: 20px;
-    }
-    .clinic-info h2 {
-        margin: 0 0 5px 0;
-        font-size: 24px;
-        font-weight: bold;
-    }
-    .clinic-info p {
-        margin: 2px 0;
-        font-size: 14px;
-    }
 
-    /* Print-specific layout for tables and boxes */
-    .patient-info table {
-        width: 48%;
-    }
-    .patient-info td {
-        padding: 4px 0;
-        font-size: 15px;
-    }
-    
-    .clinical-table th, .clinical-table td {
-        border: 1px solid #000;
-        padding: 10px;
-        text-align: center;
-        font-size: 15px;
-    }
-
-    .report-box {
-        border: 2px solid #000;
-        padding: 15px;
-        text-align: center;
-        margin-bottom: 20px;
-        page-break-inside: avoid;
-    }
-
-    .saran-print-box {
-        border: 1px dashed #000;
-        padding: 15px;
-        margin-bottom: 40px;
-        text-align: justify;
-        font-size: 15px;
-        line-height: 1.5;
-        page-break-inside: avoid;
-    }
 
     /* Reset background and colors for printing */
     * {
