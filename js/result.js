@@ -13,8 +13,17 @@ window.cetakLaporan = function(tipe = '') {
     // Jika tipe adalah 'ringkasan', kita gunakan mode cetak laporan klinik formal
     if (tipe === 'ringkasan') {
         document.body.classList.add('printing-clinic');
-        window.print();
-        document.body.classList.remove('printing-clinic');
+        
+        const afterPrint = () => {
+            document.body.classList.remove('printing-clinic');
+            window.removeEventListener('afterprint', afterPrint);
+        };
+        window.addEventListener('afterprint', afterPrint);
+        
+        // Sedikit jeda agar browser sempat menerapkan CSS sebelum dialog print muncul
+        setTimeout(() => {
+            window.print();
+        }, 100);
         return;
     }
 
@@ -217,7 +226,6 @@ function tampilkanHasil(probabilitas, dataPasien, infoDataset, datasetReal, rinc
 
     const printContainer = document.createElement('div');
     printContainer.id = 'print-clinic-report';
-    printContainer.style.display = 'none';
     printContainer.innerHTML = [
         '<!-- Header -->',
         '<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">',
@@ -240,7 +248,7 @@ function tampilkanHasil(probabilitas, dataPasien, infoDataset, datasetReal, rinc
         
         '<!-- Patient Info -->',
         '<table style="width: 100%; border: none; font-size: 13px; margin-bottom: 30px; line-height: 1.6;">',
-            '<tr><td style="width: 200px;">Nama Pasien</td><td style="width: 15px;">:</td><td>' + (dataPasien.nama_pasien ? dataPasien.nama_pasien.toUpperCase() : 'PASIEN ANONIM') + '</td></tr>',
+            '<tr><td style="width: 180px;">Nama Pasien</td><td style="width: 15px;">:</td><td>' + (dataPasien.nama_pasien ? dataPasien.nama_pasien.toUpperCase() : 'PASIEN ANONIM') + '</td></tr>',
             '<tr><td>No. MR</td><td>:</td><td>00' + Math.floor(Math.random() * 90000 + 10000) + '</td></tr>',
             '<tr><td>Usia</td><td>:</td><td>' + dataPasien.usiaAsli + ' Tahun</td></tr>',
             '<tr><td>Jenis Kelamin</td><td>:</td><td>' + (dataPasien.gender === 'L' ? 'Laki-Laki' : 'Perempuan') + '</td></tr>',
@@ -252,7 +260,7 @@ function tampilkanHasil(probabilitas, dataPasien, infoDataset, datasetReal, rinc
         '<div style="font-size: 13px; line-height: 1.6;">',
             '<b style="font-size: 13px;">Parameter Klinis Awal:</b><br>',
             'Berdasarkan data pemeriksaan yang dimasukkan, didapatkan kondisi klinis sebagai berikut:<br><br>',
-            '<table style="width: 100%; border: none; margin-left: 20px; margin-bottom: 25px;">',
+            '<table style="width: 100%; border: none; margin-bottom: 25px;">',
                 '<tr><td style="width: 180px;">Tekanan Darah</td><td style="width: 15px;">:</td><td style="text-transform: capitalize;">' + dataPasien.tekanan + '</td></tr>',
                 '<tr><td>Kolesterol Total</td><td>:</td><td style="text-transform: capitalize;">' + dataPasien.kolesterol + '</td></tr>',
                 '<tr><td>Gula Darah Puasa</td><td>:</td><td style="text-transform: capitalize;">' + dataPasien.gula_darah + '</td></tr>',
@@ -271,14 +279,14 @@ function tampilkanHasil(probabilitas, dataPasien, infoDataset, datasetReal, rinc
         '<!-- Conclusion & Recommendation -->',
         '<table style="width: 100%; border: none; font-size: 13px; line-height: 1.6; margin-bottom: 40px;">',
             '<tr>',
-                '<td style="width: 200px; vertical-align: top;"><b style="font-size: 13px;">Kesimpulan</b></td>',
+                '<td style="width: 180px; vertical-align: top;"><b style="font-size: 13px;">Kesimpulan</b></td>',
                 '<td style="width: 15px; vertical-align: top;">:</td>',
-                '<td><b>KATEGORI RISIKO ' + kategori.toUpperCase() + ' (' + probabilitas.toFixed(2) + '%)</b></td>',
+                '<td><b>KATEGORI: ' + kategori.toUpperCase() + ' (' + probabilitas.toFixed(2) + '%)</b></td>',
             '</tr>',
             '<tr>',
-                '<td style="vertical-align: top; padding-top: 10px;"><b style="font-size: 13px;">Anjuran</b></td>',
-                '<td style="vertical-align: top; padding-top: 10px;">:</td>',
-                '<td style="padding-top: 10px; text-align: justify;">' + saran + '<br>Tetap pantau indikator kesehatan secara rutin. (Catatan: Ini adalah estimasi probabilistik awal. Lakukan konsultasi lebih lanjut dengan dokter spesialis untuk penanganan klinis yang akurat).</td>',
+                '<td style="vertical-align: top;"><b style="font-size: 13px;">Anjuran</b></td>',
+                '<td style="vertical-align: top;">:</td>',
+                '<td style="text-align: justify;">' + saran + '<div style="margin-top: 8px;">Tetap pantau indikator kesehatan secara rutin. (Catatan: Ini adalah estimasi probabilistik awal. Lakukan konsultasi lebih lanjut dengan dokter spesialis untuk penanganan klinis yang akurat).</div></td>',
             '</tr>',
         '</table>',
 

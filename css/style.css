@@ -433,6 +433,11 @@ input:checked + .slider:before { transform: translateX(20px); }
     .tab-btn.active { background: var(--primary-color) !important; color: white !important; border-color: var(--primary-color) !important; }
 }
 
+/* Hide the print report in normal screen view */
+#print-clinic-report {
+    display: none;
+}
+
 /* =========================================================
    PRINT STYLES: FORMAL CLINIC REPORT
    ========================================================= */
@@ -451,10 +456,6 @@ input:checked + .slider:before { transform: translateX(20px); }
     /* Except for the dedicated print area */
     body.printing-clinic > #print-clinic-report {
         display: block !important;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
         font-family: "Times New Roman", Times, serif !important;
         color: #000 !important;
         padding: 20px 40px !important;
