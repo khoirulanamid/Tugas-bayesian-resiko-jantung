@@ -227,6 +227,11 @@ function tampilkanHasil(probabilitas, dataPasien, infoDataset, datasetReal, rinc
     const printContainer = document.createElement('div');
     printContainer.id = 'print-clinic-report';
     printContainer.innerHTML = [
+        '<!-- Custom Page Header -->',
+        '<div style="text-align: right; font-size: 10px; color: #555; margin-bottom: 25px; font-family: \'Poppins\', sans-serif;">',
+            'Sistem Prediksi Risiko Jantung - HealthTech',
+        '</div>',
+        
         '<!-- Header / Kop Surat -->',
         '<div style="display: flex; align-items: center; margin-bottom: 20px;">',
             '<!-- Kiri: Logo -->',

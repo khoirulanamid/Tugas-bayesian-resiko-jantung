@@ -442,6 +442,10 @@ input:checked + .slider:before { transform: translateX(20px); }
    PRINT STYLES: FORMAL CLINIC REPORT
    ========================================================= */
 @media print {
+    @page {
+        margin: 0;
+    }
+
     body.printing-clinic {
         background-color: white !important;
         margin: 0 !important;
@@ -459,7 +463,7 @@ input:checked + .slider:before { transform: translateX(20px); }
         width: 100% !important;
         font-family: "Times New Roman", Times, serif !important;
         color: #000 !important;
-        padding: 20px 40px !important;
+        padding: 15mm 15mm !important;
         box-sizing: border-box;
     }
 
