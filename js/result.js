@@ -1,64 +1,22 @@
-﻿window.cetakLaporan = function() {
+
+window.cetakLaporan = function(tipe = '') {
     const formCard = document.getElementById('formCard');
     const hasilCard = document.getElementById('hasilCard');
     const splitDash = document.querySelector('.split-dashboard');
     const nav = document.querySelector('.global-nav');
-        const dashHeader = document.querySelector('.dashboard-header');
+    const dashHeader = document.querySelector('.dashboard-header');
     const hero = document.querySelector('.hero-section');
     const sampleBar = document.querySelector('.sample-download-bar');
     const tabs = document.querySelector('.tabs-container');
     const printBtns = document.querySelectorAll('.btn-print');
 
-    const oldFormDisplay = formCard ? formCard.style.display : '';
-    const oldHasilStyle = hasilCard ? hasilCard.getAttribute('style') : '';
-    const oldDashStyle = splitDash ? splitDash.getAttribute('style') : '';
-
-    if (formCard) formCard.style.setProperty('display', 'none', 'important');
-    if (nav) nav.style.setProperty('display', 'none', 'important');
-        if (hero) hero.style.setProperty('display', 'none', 'important');
-    if (dashHeader) dashHeader.style.setProperty('display', 'none', 'important');
-    if (sampleBar) sampleBar.style.setProperty('display', 'none', 'important');
-    if (tabs) tabs.style.setProperty('display', 'none', 'important');
-    printBtns.forEach(btn => btn.style.setProperty('display', 'none', 'important'));
-
-    if (splitDash) {
-        splitDash.style.setProperty('display', 'block', 'important');
-        splitDash.style.setProperty('width', '100%', 'important');
+    // Jika tipe adalah 'ringkasan', kita gunakan mode cetak laporan klinik formal
+    if (tipe === 'ringkasan') {
+        document.body.classList.add('printing-clinic');
+        window.print();
+        document.body.classList.remove('printing-clinic');
+        return;
     }
-    if (hasilCard) {
-        hasilCard.style.setProperty('display', 'block', 'important');
-        hasilCard.style.setProperty('width', '100%', 'important');
-        hasilCard.style.setProperty('max-width', '100%', 'important');
-        hasilCard.style.setProperty('height', 'auto', 'important');
-        hasilCard.style.setProperty('max-height', 'none', 'important');
-        hasilCard.style.setProperty('overflow', 'visible', 'important');
-        hasilCard.style.setProperty('box-shadow', 'none', 'important');
-        hasilCard.style.setProperty('border', 'none', 'important');
-        hasilCard.style.setProperty('padding', '0', 'important');
-    }
-
-    window.print();
-
-    if (formCard) formCard.style.display = oldFormDisplay;
-    if (hasilCard) hasilCard.setAttribute('style', oldHasilStyle || '');
-    if (splitDash) splitDash.setAttribute('style', oldDashStyle || '');
-    if (nav) nav.style.display = '';
-        if (hero) hero.style.display = '';
-    if (dashHeader) dashHeader.style.display = '';
-    if (sampleBar) sampleBar.style.display = '';
-    if (tabs) tabs.style.display = '';
-    printBtns.forEach(btn => btn.style.display = '');
-};
-window.cetakLaporan = function() {
-    const formCard = document.getElementById('formCard');
-    const hasilCard = document.getElementById('hasilCard');
-    const splitDash = document.querySelector('.split-dashboard');
-    const nav = document.querySelector('.global-nav');
-        const dashHeader = document.querySelector('.dashboard-header');
-    const hero = document.querySelector('.hero-section');
-    const sampleBar = document.querySelector('.sample-download-bar');
-    const tabs = document.querySelector('.tabs-container');
-    const printBtns = document.querySelectorAll('.btn-print');
 
     // Simpan style awal
     const oldFormDisplay = formCard ? formCard.style.display : '';
@@ -68,7 +26,7 @@ window.cetakLaporan = function() {
     // Modifikasi DOM untuk cetak bersih 1 kolom penuh
     if (formCard) formCard.style.setProperty('display', 'none', 'important');
     if (nav) nav.style.setProperty('display', 'none', 'important');
-        if (hero) hero.style.setProperty('display', 'none', 'important');
+    if (hero) hero.style.setProperty('display', 'none', 'important');
     if (dashHeader) dashHeader.style.setProperty('display', 'none', 'important');
     if (sampleBar) sampleBar.style.setProperty('display', 'none', 'important');
     if (tabs) tabs.style.setProperty('display', 'none', 'important');
@@ -98,7 +56,7 @@ window.cetakLaporan = function() {
     if (hasilCard) hasilCard.setAttribute('style', oldHasilStyle || '');
     if (splitDash) splitDash.setAttribute('style', oldDashStyle || '');
     if (nav) nav.style.display = '';
-        if (hero) hero.style.display = '';
+    if (hero) hero.style.display = '';
     if (dashHeader) dashHeader.style.display = '';
     if (sampleBar) sampleBar.style.display = '';
     if (tabs) tabs.style.display = '';
@@ -189,7 +147,7 @@ function tampilkanHasil(probabilitas, dataPasien, infoDataset, datasetReal, rinc
             '<div class="saran-box" style="padding: 18px; margin-bottom: 20px;">',
                 '<strong style="font-size: 1rem;">Rekomendasi Medis</strong><p style="font-size: 0.9rem;">' + saran + '</p>',
             '</div>',
-            '<button class="btn-print" onclick="cetakLaporan()" style="width: 100%; margin: 0 0 20px;">🖨️ Cetak / Simpan Ringkasan (PDF)</button>',
+            '<button class="btn-print" onclick="cetakLaporan(\'ringkasan\')" style="width: 100%; margin: 0 0 20px;">🖨️ Cetak Laporan Medis Resmi (PDF)</button>',
             '<div class="disclaimer" style="padding-top: 16px;">',
                 '<b>Sumber Model:</b> ' + infoDataset.nama + ' (' + infoDataset.total + ' pasien historis)<br>',
                 '<i>Laplace Smoothing: ' + (rincianHitung.isLaplace ? 'Aktif' : 'Nonaktif') + '</i>',
@@ -235,7 +193,7 @@ function tampilkanHasil(probabilitas, dataPasien, infoDataset, datasetReal, rinc
                     '<b>Persentase Akhir: </b> <span style="color: ' + warna + '; font-size: 1.2rem; font-weight:bold;">' + probabilitas.toFixed(2) + '%</span>',
                 '</div>',
             '</div>',
-            '<button class="btn-print" onclick="cetakLaporan()" style="width: 100%; margin: 20px 0 0;">🖨️ Cetak / Simpan Detail Perhitungan (PDF)</button>',
+            '<button class="btn-print" onclick="cetakLaporan(\'detail\')" style="width: 100%; margin: 20px 0 0;">🖨️ Cetak / Simpan Detail Perhitungan (PDF)</button>',
         '</div>',
 
         '<!-- TAB 3: TABEL DATASET -->',
@@ -246,7 +204,73 @@ function tampilkanHasil(probabilitas, dataPasien, infoDataset, datasetReal, rinc
                     '<tbody>', tableRows, '</tbody>',
                 '</table>',
             '</div>',
-            '<button class="btn-print" onclick="cetakLaporan()" style="width: 100%; margin: 20px 0 0;">🖨️ Cetak / Simpan Tabel Dataset (PDF)</button>',
+            '<button class="btn-print" onclick="cetakLaporan(\'tabel\')" style="width: 100%; margin: 20px 0 0;">🖨️ Cetak / Simpan Tabel Dataset (PDF)</button>',
+        '</div>',
+        
+        '<!-- PRINT CLINIC REPORT TEMPLATE (HIDDEN) -->',
+        '<div id="print-clinic-report" style="display:none;">',
+            '<div class="clinic-header">',
+                '<div class="clinic-logo">🏥</div>',
+                '<div class="clinic-info">',
+                    '<h2>KLINIK UTAMA HEALTHTECH PRO</h2>',
+                    '<p>Jl. Jantung Sehat No. 123, Jakarta Pusat 10110</p>',
+                    '<p>Telp: (021) 555-0199 | Email: care@healthtech.pro</p>',
+                '</div>',
+            '</div>',
+            '<hr style="border: 1px solid #000; margin-bottom: 2px;">',
+            '<hr style="border: 2px solid #000; margin-bottom: 20px;">',
+            '<h3 class="report-title" style="text-align: center; text-decoration: underline; margin-bottom: 20px;">HASIL ANALISIS RISIKO KARDIOVASKULAR</h3>',
+            
+            '<div class="patient-info" style="display: flex; justify-content: space-between; margin-bottom: 30px;">',
+                '<table style="width: 48%; border: none;">',
+                    '<tr><td width="120">No. Rekam Medis</td><td width="10">:</td><td>RM-' + Math.floor(Math.random() * 90000 + 10000) + '</td></tr>',
+                    '<tr><td>Nama Pasien</td><td>:</td><td>' + (dataPasien.nama_pasien || 'Pasien Anonim') + '</td></tr>',
+                    '<tr><td>Usia</td><td>:</td><td>' + dataPasien.usiaAsli + ' Tahun</td></tr>',
+                '</table>',
+                '<table style="width: 48%; border: none;">',
+                    '<tr><td width="100">Tanggal</td><td width="10">:</td><td>' + new Date().toLocaleDateString('id-ID', {day: '2-digit', month: 'long', year: 'numeric'}) + '</td></tr>',
+                    '<tr><td>Gender</td><td>:</td><td>' + (dataPasien.gender === 'L' ? 'Laki-laki' : 'Perempuan') + '</td></tr>',
+                '</table>',
+            '</div>',
+
+            '<h4>1. Data Klinis Parameter Medis</h4>',
+            '<table class="clinical-table" style="width: 100%; border-collapse: collapse; margin-bottom: 25px;" border="1">',
+                '<tr>',
+                    '<th style="padding: 8px;">Tekanan Darah</th>',
+                    '<th style="padding: 8px;">Kolesterol Total</th>',
+                    '<th style="padding: 8px;">Gula Darah Puasa</th>',
+                    '<th style="padding: 8px;">Riwayat Genetik</th>',
+                '</tr>',
+                '<tr>',
+                    '<td style="padding: 8px; text-transform: capitalize; text-align: center;">' + dataPasien.tekanan + '</td>',
+                    '<td style="padding: 8px; text-transform: capitalize; text-align: center;">' + dataPasien.kolesterol + '</td>',
+                    '<td style="padding: 8px; text-transform: capitalize; text-align: center;">' + dataPasien.gula_darah + '</td>',
+                    '<td style="padding: 8px; text-transform: capitalize; text-align: center;">' + dataPasien.riwayat + '</td>',
+                '</tr>',
+            '</table>',
+
+            '<h4>2. Hasil Prediksi Algoritma Sistem Pakar (Naive Bayes)</h4>',
+            '<div class="report-box">',
+                '<p style="margin-bottom: 10px;">Berdasarkan hasil analisis sistem pakar terkomputerisasi, pasien dikategorikan memiliki:</p>',
+                '<h2 style="color: ' + warna + ' !important; margin-bottom: 10px; font-size: 26px;">' + kategori.toUpperCase() + '</h2>',
+                '<p style="font-size: 16px; margin-bottom: 0;">Probabilitas Risiko Jantung: <b>' + probabilitas.toFixed(2) + '%</b></p>',
+            '</div>',
+
+            '<h4>3. Rekomendasi Medis / Saran</h4>',
+            '<div class="saran-print-box">',
+                saran,
+            '</div>',
+            
+            '<p style="font-size: 12px; font-style: italic; margin-bottom: 40px; color: #555;">*Catatan: Hasil analisis ini merupakan estimasi awal berdasarkan data klinis dan algoritma Teorema Bayes (Laplace Smoothing ' + (rincianHitung.isLaplace ? 'Aktif' : 'Nonaktif') + '). Harap konsultasikan lebih lanjut dengan dokter spesialis untuk diagnosis pasti.</p>',
+
+            '<div class="signature-area" style="display: flex; justify-content: flex-end; margin-top: 30px;">',
+                '<div style="text-align: center;">',
+                    '<p>Jakarta, ' + new Date().toLocaleDateString('id-ID', {day: '2-digit', month: 'long', year: 'numeric'}) + '</p>',
+                    '<p style="margin-bottom: 70px;">Dokter Pemeriksa,</p>',
+                    '<p style="text-decoration: underline; font-weight: bold;">dr. HealthTech Spesialis Jantung</p>',
+                    '<p>SIP: 123.456.7890</p>',
+                '</div>',
+            '</div>',
         '</div>'
     ].join('');
 

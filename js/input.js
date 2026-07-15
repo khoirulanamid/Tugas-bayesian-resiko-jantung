@@ -1,4 +1,4 @@
-﻿// js/input.js
+// js/input.js
 
 function tampilkanError(pesan) {
     let errorBox = document.getElementById("error-message");
@@ -22,6 +22,7 @@ function sembunyikanError() {
 
 function getInputData() {
     sembunyikanError();
+    const nama_pasien = document.getElementById("nama_pasien").value;
     const usia = document.getElementById("usia").value;
     const gender = document.getElementById("gender").value;
     const tekanan = document.getElementById("tekanan").value;
@@ -30,8 +31,8 @@ function getInputData() {
     const riwayat = document.getElementById("riwayat").value;
 
     // Validasi input
-    if (!usia || !gender || !tekanan || !kolesterol || !gulaDarah || !riwayat) {
-        tampilkanError("Mohon lengkapi semua parameter medis (6 field) terlebih dahulu!");
+    if (!nama_pasien || !usia || !gender || !tekanan || !kolesterol || !gulaDarah || !riwayat) {
+        tampilkanError("Mohon lengkapi semua parameter (termasuk Nama Pasien) terlebih dahulu!");
         return null;
     }
 
@@ -52,6 +53,7 @@ function getInputData() {
     }
 
     return {
+        nama_pasien: nama_pasien,
         usia: kategoriUsia,
         gender: gender,
         tekanan: tekanan,
