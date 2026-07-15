@@ -227,22 +227,24 @@ function tampilkanHasil(probabilitas, dataPasien, infoDataset, datasetReal, rinc
     const printContainer = document.createElement('div');
     printContainer.id = 'print-clinic-report';
     printContainer.innerHTML = [
-        '<!-- Header -->',
-        '<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">',
-            '<div style="display: flex; align-items: center; gap: 15px;">',
+        '<!-- Header / Kop Surat -->',
+        '<div style="position: relative; margin-bottom: 20px; text-align: center;">',
+            '<div style="position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 12px;">',
                 '<div style="font-size: 3rem; line-height: 1;">⚕️</div>',
-                '<div>',
-                    '<h2 style="margin: 0; font-size: 20px; color: #1e3a8a;">HealthTech</h2>',
-                    '<h2 style="margin: 0; font-size: 20px; color: #64748b; font-weight: normal;">Klinik Jantung</h2>',
+                '<div style="text-align: left;">',
+                    '<h2 style="margin: 0; font-size: 18px; color: #1e3a8a; letter-spacing: 0.5px;">HealthTech</h2>',
+                    '<h2 style="margin: 0; font-size: 14px; color: #64748b; font-weight: normal;">Klinik Jantung</h2>',
                 '</div>',
             '</div>',
-            '<div style="text-align: center; font-size: 13px; line-height: 1.4;">',
-                '<b style="font-size: 15px;">KLINIK UTAMA HEALTHTECH PRO</b><br>',
+            '<div style="font-size: 13px; line-height: 1.4; padding-top: 5px;">',
+                '<b style="font-size: 16px; letter-spacing: 0.5px;">KLINIK UTAMA HEALTHTECH PRO</b><br>',
                 'Jl. Jantung Sehat No. 123, Jakarta Pusat<br>',
                 'Kec. Menteng, DKI Jakarta – 10110<br>',
-                '<b>Telp. 021 5550199</b>',
+                '<b>Telp. 021 5550199 | Email: care@healthtech.pro</b>',
             '</div>',
         '</div>',
+        '<hr style="border: 0; border-top: 3px solid #000; margin: 0 0 2px 0;">',
+        '<hr style="border: 0; border-top: 1px solid #000; margin: 0 0 30px 0;">',
         
         '<h3 style="text-align: center; font-size: 14px; margin-bottom: 30px;">LAPORAN ANALISIS RISIKO KARDIOVASKULAR</h3>',
         
