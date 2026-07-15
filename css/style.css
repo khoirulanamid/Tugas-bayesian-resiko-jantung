@@ -460,6 +460,7 @@ input:checked + .slider:before { transform: translateX(20px); }
     /* Except for the dedicated print area */
     body.printing-clinic > #print-clinic-report {
         display: block !important;
+        position: relative !important;
         width: 100% !important;
         font-family: "Times New Roman", Times, serif !important;
         color: #000 !important;
